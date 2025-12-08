@@ -1,0 +1,17 @@
+{
+  "name": "ai-line",
+  "version": "0.0.1",
+  "description": "Graphical creation of AI workflows",
+  "main": "index.js",
+  "repository": "git@github.com:demonskp/ai-line.git",
+  "author": "demonskp",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "private": true,
+  "scripts": {
+    "dev:client": "yarn workspace client dev",
+    "dev:service": "yarn workspace service dev"
+  }
+}
