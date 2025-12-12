@@ -3,7 +3,11 @@ import cors from "cors";
 import { loggerMiddleware } from "./middlewares/logger";
 import { authMiddleware } from "./middlewares/auth";
 import { errorMiddleware } from "./middlewares/error";
-import { loadControllers } from "./controllers";
+import {
+  loadControllers,
+  loadLoginControllers,
+  loadUnLoginControllers,
+} from "./controllers";
 
 const app: Express = express();
 
@@ -25,7 +29,10 @@ authRouter.get("/", (req, res) => {
   res.json({ message: "Welcome to AI Line Service!" });
 });
 
-loadControllers(authRouter);
+// 不鉴权
+loadUnLoginControllers(app);
+// 鉴权
+loadLoginControllers(authRouter);
 
 // 根路由
 app.use("/api", authRouter);
