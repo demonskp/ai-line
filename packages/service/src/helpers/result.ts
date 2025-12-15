@@ -5,6 +5,7 @@ export const ERROR_CODE = {
   COMMON_ERROR: 10001, // 通用错误
   LOGIN_ERROR: 10002, // 登录错误
   TOKEN_ERROR: 10003, // 令牌错误
+  VALIDATION_ERROR: 10004, // 参数验证错误
 };
 
 export function success<T>(data: T): IResult<T> {

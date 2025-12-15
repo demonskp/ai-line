@@ -1,9 +1,18 @@
 import { Request, Response } from "express";
 import { userService } from "../services";
 import { encryptHelper, jwtHelper, resultHelper } from "../helpers";
+import { validate, zod } from "../helpers/validate";
+
+const loginSchema = zod
+  .object({
+    account: zod.string(),
+    password: zod.string(),
+  })
+  .required();
 
 export async function login(req: Request, res: Response) {
-  const { account, password } = req.body;
+  const { account, password } = validate(loginSchema, req.body);
+
   const user = await userService
     .validateUser(account)
     .catch((err) => undefined);
@@ -29,8 +38,4 @@ export async function login(req: Request, res: Response) {
       token: jwtHelper.signToken({ id: user.id, account: user.account }),
     })
   );
-}
-
-export async function health(req: Request, res: Response) {
-  res.json(resultHelper.success({ message: "ok" }));
 }

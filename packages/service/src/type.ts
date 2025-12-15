@@ -1,4 +1,5 @@
 import { RowDataPacket } from "mysql2";
+import { Request, Response } from "express";
 
 export interface User extends RowDataPacket {
   id: string;
@@ -28,3 +29,5 @@ export interface Pager {
   page?: number;
   pageSize?: number;
 }
+
+export type IController = (req: Request, res: Response) => Promise<void> | void;

@@ -1,7 +1,7 @@
+import { randomUUID } from "crypto";
 import { RowDataPacket } from "mysql2";
 import { databaseHelper, encryptHelper, resultHelper } from "../helpers";
 import { IPagerDatas, Pager, User } from "../type";
-import { v4 as uuidv4 } from "uuid";
 
 export async function validateUser(account: string) {
   const userData = await databaseHelper.queryOne<User & { password: string }>(
@@ -28,7 +28,7 @@ export async function createUser(user: Omit<User, "id">) {
   if (userData) {
     resultHelper.throwError("用户已存在");
   }
-  const id = uuidv4();
+  const id = randomUUID();
   const encryptedPassword = await encryptHelper.hashPassword(password);
   const insertId = await databaseHelper.insert(
     "INSERT INTO users (id, name, account, email, password, create_time, update_time, pw_changed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
