@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import { contextHelper } from "../helpers";
 
 /**
  * 日志中间件 - 记录 HTTP 请求信息
@@ -14,7 +15,7 @@ export const loggerMiddleware = (
   // 请求信息
   const method = req.method;
   const url = req.originalUrl || req.url;
-  const ip = req.ip || req.socket.remoteAddress || "-";
+  const requestId = contextHelper.get("requestId");
 
   // 响应完成后记录日志
   res.on("finish", () => {
@@ -23,7 +24,7 @@ export const loggerMiddleware = (
     const statusColor = getStatusColor(statusCode);
 
     console.log(
-      `[${timestamp}] ${statusColor}${method} ${url} ${statusCode}\x1b[0m - ${duration}ms - ${ip}`
+      `[${timestamp}] [${requestId}] ${statusColor}${method} ${url} ${statusCode}\x1b[0m - ${duration}ms`
     );
   });
 

@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
 export interface User extends RowDataPacket {
   id: string;
@@ -25,9 +25,20 @@ export interface IPagerDatas<T> {
   pageSize: number;
 }
 
+export interface IContext {
+  requestId: string;
+  user?: User;
+  local?: string;
+}
+
 export interface Pager {
   page?: number;
   pageSize?: number;
 }
 
 export type IController = (req: Request, res: Response) => Promise<void> | void;
+export type IMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<void> | void;

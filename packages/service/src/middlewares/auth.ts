@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { jwtHelper, resultHelper } from "../helpers";
+import { contextHelper, jwtHelper, resultHelper } from "../helpers";
 import { userService } from "../services";
 
 export const authMiddleware = async (
@@ -20,5 +20,6 @@ export const authMiddleware = async (
     resultHelper.throwError("未授权", resultHelper.ERROR_CODE.TOKEN_ERROR);
   }
   req.user = user;
+  contextHelper.set("user", user);
   next();
 };

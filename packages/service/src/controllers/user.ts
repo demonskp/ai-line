@@ -1,6 +1,6 @@
 import { IController } from "../type";
 import { userService } from "../services";
-import { resultHelper } from "../helpers";
+import { contextHelper, resultHelper } from "../helpers";
 import { validate, zod } from "../helpers/validate";
 
 const listSchema = zod.object({
@@ -19,4 +19,8 @@ export const userList: IController = async (req, res) => {
     pageSize: data.pageSize,
   });
   res.json(resultHelper.success(userListData));
+};
+
+export const currentUserInfo: IController = async (req, res) => {
+  res.json(resultHelper.success({ info: req.user }));
 };

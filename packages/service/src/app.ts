@@ -3,11 +3,8 @@ import cors from "cors";
 import { loggerMiddleware } from "./middlewares/logger";
 import { authMiddleware } from "./middlewares/auth";
 import { errorMiddleware } from "./middlewares/error";
-import {
-  loadControllers,
-  loadLoginControllers,
-  loadUnLoginControllers,
-} from "./controllers";
+import { loadLoginControllers, loadUnLoginControllers } from "./controllers";
+import { contextMiddleware } from "./middlewares/context";
 
 const app: Express = express();
 
@@ -15,6 +12,7 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(contextMiddleware);
 app.use(loggerMiddleware);
 
 // 健康检查接口
