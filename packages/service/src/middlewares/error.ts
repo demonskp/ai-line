@@ -34,7 +34,7 @@ const getHttpStatus = (code: number): number => {
  */
 export const errorMiddleware = (
   err: unknown,
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction
 ): void => {
@@ -54,7 +54,7 @@ export const errorMiddleware = (
     console.error("[Error]", err.stack || err.message);
     const result: IResult<null> = {
       code: ERROR_CODE.COMMON_ERROR,
-      message: err.message || "服务器内部错误",
+      message: err.message || req.t("internal_server_error"),
       data: null,
     };
     res.status(500).json(result);
@@ -65,7 +65,7 @@ export const errorMiddleware = (
   console.error("[Unknown Error]", err);
   const result: IResult<null> = {
     code: ERROR_CODE.COMMON_ERROR,
-    message: "服务器内部错误",
+    message: req.t("internal_server_error"),
     data: null,
   };
   res.status(500).json(result);

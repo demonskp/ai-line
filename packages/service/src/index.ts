@@ -3,10 +3,18 @@ import "dotenv/config";
 import app from "./app";
 import { databaseHelper } from "./helpers";
 import { createUser, getUserList } from "./services/user";
+import i18next from "i18next";
+import { getMessage } from "./i18n";
 
 const PORT = process.env.PORT || 3000;
 
 async function bootstrap() {
+  // 国际化初始
+  i18next.init({
+    fallbackLng: "en",
+    resources: getMessage(),
+  });
+
   // 测试连接
   await databaseHelper.connectTest();
 

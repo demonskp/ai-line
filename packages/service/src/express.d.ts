@@ -6,6 +6,7 @@ declare global {
       token?: string;
       requestId?: string;
       user?: User;
+      t: (key: string, options?: TOptions) => string;
       [key: string]: any;
     }
   }

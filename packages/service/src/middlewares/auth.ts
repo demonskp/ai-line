@@ -12,12 +12,18 @@ export const authMiddleware = async (
     token = token[0];
   }
   if (!token) {
-    resultHelper.throwError("未授权", resultHelper.ERROR_CODE.TOKEN_ERROR);
+    resultHelper.throwError(
+      req.t("unauthorized"),
+      resultHelper.ERROR_CODE.TOKEN_ERROR
+    );
   }
   const payload = jwtHelper.verifyToken(token);
   const user = await userService.userInfo({ id: payload.id });
   if (!user) {
-    resultHelper.throwError("未授权", resultHelper.ERROR_CODE.TOKEN_ERROR);
+    resultHelper.throwError(
+      req.t("unauthorized"),
+      resultHelper.ERROR_CODE.TOKEN_ERROR
+    );
   }
   req.user = user;
   contextHelper.set("user", user);

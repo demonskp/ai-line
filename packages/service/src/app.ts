@@ -5,6 +5,7 @@ import { authMiddleware } from "./middlewares/auth";
 import { errorMiddleware } from "./middlewares/error";
 import { loadLoginControllers, loadUnLoginControllers } from "./controllers";
 import { contextMiddleware } from "./middlewares/context";
+import i18next from "i18next";
 
 const app: Express = express();
 
@@ -15,16 +16,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(contextMiddleware);
 app.use(loggerMiddleware);
 
-// 健康检查接口
-app.get("/health", (_req: Request, res: Response) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
-});
-
 const authRouter = express.Router();
 authRouter.use(authMiddleware);
 
-authRouter.get("/", (req, res) => {
-  res.json({ message: "Welcome to AI Line Service!" });
+app.get("/health", (req, res) => {
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    message: req.t("hello"),
+  });
 });
 
 // 不鉴权

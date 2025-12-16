@@ -1,5 +1,6 @@
 import { RowDataPacket } from "mysql2";
 import { NextFunction, Request, Response } from "express";
+import { TOptions } from "i18next";
 
 export interface User extends RowDataPacket {
   id: string;
@@ -29,6 +30,7 @@ export interface IContext {
   requestId: string;
   user?: User;
   local?: string;
+  t: (key: string, options?: TOptions) => string;
 }
 
 export interface Pager {

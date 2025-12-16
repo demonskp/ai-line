@@ -1,0 +1,6 @@
+{
+  "hello": "Welcome to AI Line Service!",
+  "unauthorized": "Unauthorized",
+  "internal_server_error": "Internal Server Error",
+  "user_already_exists": "User already exists"
+}

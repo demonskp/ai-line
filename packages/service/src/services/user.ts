@@ -1,6 +1,11 @@
 import { randomUUID } from "crypto";
 import { RowDataPacket } from "mysql2";
-import { databaseHelper, encryptHelper, resultHelper } from "../helpers";
+import {
+  contextHelper,
+  databaseHelper,
+  encryptHelper,
+  resultHelper,
+} from "../helpers";
 import { IPagerDatas, Pager, User } from "../type";
 
 export async function validateUser(account: string) {
@@ -21,12 +26,15 @@ export async function userInfo(
 
 export async function createUser(user: Omit<User, "id">) {
   const { name, password, email, account } = user;
+  const t = contextHelper.get("t");
   const userData = await databaseHelper.queryOne<User>(
     "SELECT id, name, email, create_time, update_time, pw_changed FROM users WHERE name = ?",
     [name]
   );
   if (userData) {
-    resultHelper.throwError("用户已存在");
+    resultHelper.throwError(
+      t?.("user_already_exists") ?? "user_already_exists"
+    );
   }
   const id = randomUUID();
   const encryptedPassword = await encryptHelper.hashPassword(password);
