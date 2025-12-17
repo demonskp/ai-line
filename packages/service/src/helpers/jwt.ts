@@ -41,8 +41,12 @@ export function signToken(
 export function verifyToken(
   token: string,
   options?: VerifyOptions
-): TokenPayload {
-  return jwt.verify(token, JWT_SECRET, options) as TokenPayload;
+): TokenPayload | null {
+  try {
+    return jwt.verify(token, JWT_SECRET, options) as TokenPayload;
+  } catch (error) {
+    return null;
+  }
 }
 
 /**

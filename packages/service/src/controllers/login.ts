@@ -6,7 +6,7 @@ import { validate, zod } from "../helpers/validate";
 const REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
 const REFRESH_TOKEN_MAX_AGE = 1000 * 60 * 60 * 24 * 30;
 const REFRESH_JWT_TOKEN_MAX_AGE = "7d";
-const JWT_TOKEN_MAX_AGE = "2h";
+const JWT_TOKEN_MAX_AGE = "1h";
 
 const loginSchema = zod
   .object({
@@ -53,17 +53,18 @@ export async function login(req: Request, res: Response) {
   res.json(
     resultHelper.success({
       user: { name: user.name, account: user.account, email: user.email },
-      token: jwtHelper.signToken({
-        id: user.id,
-        account: user.account,
-        expiresIn: JWT_TOKEN_MAX_AGE,
-      }),
+      token: jwtHelper.signToken(
+        {
+          id: user.id,
+          account: user.account,
+        },
+        { expiresIn: JWT_TOKEN_MAX_AGE }
+      ),
     })
   );
 }
 
 export async function refreshToken(req: Request, res: Response) {
-  console.log(1111, req.cookies);
   const refreshToken = req.cookies.refresh_token;
   if (!refreshToken) {
     resultHelper.throwError(req.t("refresh_token_not_found"));
@@ -78,11 +79,13 @@ export async function refreshToken(req: Request, res: Response) {
   }
   res.cookie(
     REFRESH_TOKEN_COOKIE_NAME,
-    jwtHelper.signToken({
-      id: user.id,
-      account: user.account,
-      expiresIn: REFRESH_JWT_TOKEN_MAX_AGE,
-    }),
+    jwtHelper.signToken(
+      {
+        id: user.id,
+        account: user.account,
+      },
+      { expiresIn: REFRESH_JWT_TOKEN_MAX_AGE }
+    ),
     {
       httpOnly: true,
       // secure: process.env.NODE_ENV === "production",
@@ -93,11 +96,13 @@ export async function refreshToken(req: Request, res: Response) {
   res.json(
     resultHelper.success({
       user: { name: user.name, account: user.account, email: user.email },
-      token: jwtHelper.signToken({
-        id: user.id,
-        account: user.account,
-        expiresIn: JWT_TOKEN_MAX_AGE,
-      }),
+      token: jwtHelper.signToken(
+        {
+          id: user.id,
+          account: user.account,
+        },
+        { expiresIn: JWT_TOKEN_MAX_AGE }
+      ),
     })
   );
 }

@@ -18,6 +18,12 @@ export const authMiddleware = async (
     );
   }
   const payload = jwtHelper.verifyToken(token);
+  if (!payload) {
+    resultHelper.throwError(
+      req.t("unauthorized"),
+      resultHelper.ERROR_CODE.TOKEN_ERROR
+    );
+  }
   const user = await userService.userInfo({ id: payload.id });
   if (!user) {
     resultHelper.throwError(
