@@ -46,7 +46,7 @@ export async function login(req: Request, res: Response) {
     {
       httpOnly: true,
       // secure: process.env.NODE_ENV === "production",
-      maxAge: 1000 * 60 * 60 * 24 * 30,
+      maxAge: REFRESH_TOKEN_MAX_AGE,
       path: "/api/refresh_token",
     }
   );
