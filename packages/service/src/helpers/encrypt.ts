@@ -5,6 +5,7 @@ import crypto from "crypto";
 const CRYPTO_SECRET_KEY = process.env.CRYPTO_SECRET_KEY; // 必须是32字节
 const CRYPTO_ALGORITHM = "aes-256-gcm";
 const BCRYPT_SALT_ROUNDS = 10;
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
 // ==================== Bcrypt 不可逆加密 ====================
 
@@ -87,4 +88,53 @@ export function decrypt(encryptedText: string): string {
   decrypted += decipher.final("utf8");
 
   return decrypted;
+}
+
+/**
+ * 使用私钥对数据进行加密
+ * @param text 要加密的明文
+ * @returns 加密后的 base64 字符串
+ */
+export function encryptWithPrivateKey(text: string): string {
+  try {
+    // 使用私钥加密（实际上是签名操作）
+    const encrypted = crypto.privateEncrypt(
+      {
+        key: PRIVATE_KEY,
+        padding: crypto.constants.RSA_PKCS1_PADDING,
+      },
+      Buffer.from(text, "utf8")
+    );
+
+    return encrypted.toString("base64");
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
+}
+
+/**
+ * 使用私钥对数据进行解密
+ * @param encryptedText 加密后的 base64 字符串
+ * @returns 解密后的明文
+ */
+export function decryptWithPrivateKey(encryptedText: string): string {
+  const buffer = Buffer.from(encryptedText, "base64");
+
+  // 使用私钥解密
+  try {
+    const decrypted = crypto.privateDecrypt(
+      {
+        key: PRIVATE_KEY,
+        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+        oaepHash: "sha256",
+      },
+      buffer
+    );
+
+    return decrypted.toString("utf8");
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
 }

@@ -23,6 +23,7 @@ declare global {
       DB_DATABASE: string;
       JWT_SECRET: string;
       CRYPTO_SECRET_KEY: string;
+      PRIVATE_KEY: string;
     }
   }
 }

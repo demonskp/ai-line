@@ -5,7 +5,7 @@ import { authMiddleware } from "./middlewares/auth";
 import { errorMiddleware } from "./middlewares/error";
 import { loadLoginControllers, loadUnLoginControllers } from "./controllers";
 import { contextMiddleware } from "./middlewares/context";
-import i18next from "i18next";
+import cookieParser from "cookie-parser";
 
 const app: Express = express();
 
@@ -13,6 +13,7 @@ const app: Express = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(contextMiddleware);
 app.use(loggerMiddleware);
 

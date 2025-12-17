@@ -80,9 +80,10 @@ export async function getUserList(
     conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
   // 查询总数
+  const sql = `SELECT COUNT(*) as total FROM users ${whereClause}`;
   const countResult = await databaseHelper.queryOne<
     { total: number } & RowDataPacket
-  >(`SELECT COUNT(*) as total FROM users ${whereClause}`, queryParams);
+  >(sql, queryParams);
   const total = countResult?.total || 0;
 
   // 查询列表数据
