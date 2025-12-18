@@ -1,6 +1,7 @@
 import { RowDataPacket } from "mysql2";
 import { NextFunction, Request, Response } from "express";
 import { TOptions } from "i18next";
+import pino from "pino";
 
 export interface User extends RowDataPacket {
   id: string;
@@ -30,6 +31,7 @@ export interface IContext {
   requestId: string;
   user?: User;
   local?: string;
+  logger: pino.Logger;
   t: (key: string, options?: TOptions) => string;
 }
 

@@ -1,4 +1,5 @@
 import "express";
+import pino from "pino";
 
 declare global {
   namespace Express {
@@ -7,6 +8,7 @@ declare global {
       requestId?: string;
       user?: User;
       t: (key: string, options?: TOptions) => string;
+      logger: pino.Logger;
       [key: string]: any;
     }
   }
