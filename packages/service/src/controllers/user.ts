@@ -33,6 +33,7 @@ const createAccountSchema = zod
     account: zod.string(),
     password: zod.string(),
     email: zod.string(),
+    role_ids: zod.array(zod.string()),
   })
   .required({
     name: true,
@@ -49,9 +50,12 @@ export const createAccount: IController = async (req, res) => {
   if (!decryptedPassword) {
     resultHelper.throwError(req.t("password_decrypt_failed"));
   }
-  await userService.createUser({
-    ...data,
-    password: decryptedPassword,
-  });
+  await userService.createUser(
+    {
+      ...data,
+      password: decryptedPassword,
+    },
+    data.role_ids
+  );
   res.json(resultHelper.success({}));
 };

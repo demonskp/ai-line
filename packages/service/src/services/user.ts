@@ -24,7 +24,10 @@ export async function userInfo(
   return result.list[0] ?? undefined;
 }
 
-export async function createUser(user: Omit<User, "id">) {
+export async function createUser(
+  user: Omit<User, "id">,
+  role_ids: string[] = []
+) {
   const { name, password, email, account } = user;
   const t = contextHelper.get("t");
   const userData = await databaseHelper.queryOne<User>(
@@ -38,12 +41,35 @@ export async function createUser(user: Omit<User, "id">) {
   }
   const id = randomUUID();
   const encryptedPassword = await encryptHelper.hashPassword(password);
-  const insertId = await databaseHelper.insert(
-    "INSERT INTO users (id, name, account, email, password, create_time, update_time, pw_changed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-    [id, name, account, email, encryptedPassword, new Date(), new Date(), false]
-  );
 
-  return insertId;
+  const resultId = await databaseHelper.transaction(async (connect) => {
+    const insertId = await databaseHelper.insert(
+      "INSERT INTO users (id, name, account, email, password, create_time, update_time, pw_changed) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        id,
+        name,
+        account,
+        email,
+        encryptedPassword,
+        new Date(),
+        new Date(),
+        false,
+      ],
+      connect
+    );
+    if (role_ids.length > 0) {
+      const roleSql = `INSERT INTO user_role (user_id, role_id) VALUES ${role_ids
+        .map((roleId) => `(?, ?)`)
+        .join(",")}`;
+      await databaseHelper.insert(
+        roleSql,
+        role_ids.map((roleId) => [id, roleId]).flat(),
+        connect
+      );
+    }
+    return insertId;
+  });
+  return resultId;
 }
 
 export async function getUserList(
