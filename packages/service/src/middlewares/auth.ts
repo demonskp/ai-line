@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { contextHelper, jwtHelper, resultHelper } from "../helpers";
-import { userService } from "../services";
+import { permissionService, userService } from "../services";
 
 export const authMiddleware = async (
   req: Request,
@@ -33,5 +33,8 @@ export const authMiddleware = async (
   }
   req.user = user;
   contextHelper.set("user", user);
+
+  const permissions = await permissionService.getPermissionsByUserId(user.id);
+  req.permissions = permissions;
   next();
 };

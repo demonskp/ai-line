@@ -1,6 +1,6 @@
 import { IController } from "../type";
 import { userService } from "../services";
-import { contextHelper, resultHelper } from "../helpers";
+import { contextHelper, encryptHelper, resultHelper } from "../helpers";
 import { validate, zod } from "../helpers/validate";
 
 const listSchema = zod.object({
@@ -22,5 +22,36 @@ export const userList: IController = async (req, res) => {
 };
 
 export const currentUserInfo: IController = async (req, res) => {
-  res.json(resultHelper.success({ info: req.user }));
+  res.json(
+    resultHelper.success({ info: req.user, permissions: req.permissions })
+  );
+};
+
+const createAccountSchema = zod
+  .object({
+    name: zod.string(),
+    account: zod.string(),
+    password: zod.string(),
+    email: zod.string(),
+  })
+  .required({
+    name: true,
+    account: true,
+    password: true,
+    email: true,
+  });
+
+export const createAccount: IController = async (req, res) => {
+  const data = validate(createAccountSchema, req.body);
+
+  // 解密
+  const decryptedPassword = encryptHelper.decryptWithPrivateKey(data.password);
+  if (!decryptedPassword) {
+    resultHelper.throwError(req.t("password_decrypt_failed"));
+  }
+  await userService.createUser({
+    ...data,
+    password: decryptedPassword,
+  });
+  res.json(resultHelper.success({}));
 };

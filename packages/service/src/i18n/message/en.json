@@ -3,5 +3,6 @@
   "unauthorized": "Unauthorized",
   "internal_server_error": "Internal Server Error",
   "user_already_exists": "User already exists",
-  "account_or_password_error": "Account or password error"
+  "account_or_password_error": "Account or password error",
+  "password_decrypt_failed": "Password decrypt failed"
 }

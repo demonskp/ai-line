@@ -8,8 +8,8 @@ export interface User extends RowDataPacket {
   name: string;
   account: string;
   email?: string;
-  // password: string;
-  create_time: Date;
+  password?: string;
+  create_time?: Date;
   update_time?: Date;
   pw_changed?: boolean;
 }
@@ -31,6 +31,7 @@ export interface IContext {
   requestId: string;
   user?: User;
   local?: string;
+  permissions?: Permission[];
   logger: pino.Logger;
   t: (key: string, options?: TOptions) => string;
 }
@@ -46,3 +47,11 @@ export type IMiddleware = (
   res: Response,
   next: NextFunction
 ) => Promise<void> | void;
+
+export interface Permission extends RowDataPacket {
+  id: string;
+  name: string;
+  desc: string;
+  parent_id: string;
+  sort: number;
+}
