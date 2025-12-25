@@ -1,0 +1,23 @@
+{
+  "welcome_back": "Welcome Back",
+  "please_login_your_account": "Please login to your account",
+  "fields": {
+    "account": "Account",
+    "password": "Password",
+    "login": "Login"
+  },
+  "label": {
+    "please_input": "Please enter {{label}}",
+    "success": "{{label}} successful"
+  },
+  "networks": {
+    "401": "Need to login again",
+    "403": "Insufficient permissions",
+    "404": "Network request error",
+    "500+": "Server error",
+    "504|502": "Gateway server error",
+    "default": "Network request error occurred",
+    "net": "No network",
+    "ETIMEDOUT": "Network request timeout"
+  }
+}

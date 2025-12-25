@@ -2,6 +2,7 @@ import axios from "axios";
 import { useAccountStore } from "../store/account-store";
 import type { IResult } from "../type";
 import { message } from "antd";
+import i18next from "i18next";
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -29,9 +30,16 @@ request.interceptors.response.use((response) => {
   return response;
 });
 
+const ERROR_STATUS_MAP = {
+  404: "not_found",
+  401: "unauthorized",
+  500: "internal_server_error",
+  400: "bad_request",
+};
+
 request.interceptors.response.use(async (response) => {
-  const httpStatus = response.status;
-  if (httpStatus === 401) {
+  const httpCode = response.status;
+  if (httpCode === 401) {
     const newAccessToken = await useAccountStore
       .getState()
       .refreshToken()
@@ -43,6 +51,34 @@ request.interceptors.response.use(async (response) => {
     const config = response.config;
     const result = await request(config);
     return result;
+  }
+
+  if (httpCode !== 200) {
+    let errMsg = "";
+    switch (httpCode) {
+      case 401:
+        // 登录验证
+        errMsg = `${httpCode}:${i18next.t("Networks.401")}`;
+        break;
+      case 404:
+        errMsg = `${httpCode}:${i18next.t("Networks.404")}`;
+        break;
+      case 500:
+      case 503:
+        errMsg = `${httpCode}:${i18next.t("Networks.500+")}`;
+        break;
+      case 502:
+      case 504:
+        errMsg = `${httpCode}:${i18next.t("Networks.504|502")}`;
+        break;
+      default:
+        errMsg = i18next.t("Networks.default");
+        break;
+    }
+    if (errMsg) {
+      message.error(errMsg);
+    }
+    throw new Error(response.data.message);
   }
 
   return response;

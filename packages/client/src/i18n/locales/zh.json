@@ -1,0 +1,23 @@
+{
+  "welcome_back": "欢迎回来",
+  "please_login_your_account": "请登录您的账号",
+  "fields": {
+    "account": "账号",
+    "password": "密码",
+    "login": "登录"
+  },
+  "label": {
+    "please_input": "请输入{{label}}",
+    "success": "{{label}}成功"
+  },
+  "networks": {
+    "401": "需要重新登录",
+    "403": "权限不足",
+    "404": "网络请求错误",
+    "500+": "服务器错误",
+    "504|502": "网关服务器错误",
+    "default": "网络请求发生错误",
+    "net": "无网络",
+    "ETIMEDOUT": "网络请求超时"
+  }
+}

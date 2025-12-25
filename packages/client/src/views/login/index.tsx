@@ -6,6 +6,8 @@ import { accountApi } from "../../apis";
 import { useAccountStore } from "../../store/account-store";
 import "./index.less";
 import { encryptHelper } from "../../helpers";
+import { useTranslation } from "react-i18next";
+import AlLangSwitcher from "../../widgets/al-lang-switcher";
 
 const { Title, Text } = Typography;
 
@@ -18,6 +20,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const loginSuccess = useAccountStore((state) => state.loginSuccess);
+  const { t } = useTranslation();
 
   const onFinish = async (values: LoginFormValues) => {
     setLoading(true);
@@ -27,7 +30,7 @@ export default function LoginPage() {
       );
       const res = await accountApi.login(values.account, encryptedPassword);
       loginSuccess(res.token, values.account);
-      message.success("登录成功");
+      message.success(t("label.success", { label: t("login") }));
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -38,19 +41,16 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
-      <div className="login-bg">
-        <div className="login-bg-shape shape-1" />
-        <div className="login-bg-shape shape-2" />
-        <div className="login-bg-shape shape-3" />
+      <div className="login-lang-switcher">
+        <AlLangSwitcher />
       </div>
-
-      <Card className="login-card" bordered={false}>
+      <Card className="login-card">
         <div className="login-header">
           <Title level={2} className="login-title">
-            欢迎回来
+            {t("welcome_back")}
           </Title>
           <Text type="secondary" className="login-subtitle">
-            请登录您的账号
+            {t("please_login_your_account")}
           </Text>
         </div>
 
@@ -63,22 +63,36 @@ export default function LoginPage() {
         >
           <Form.Item
             name="account"
-            rules={[{ required: true, message: "请输入账号" }]}
+            rules={[
+              {
+                required: true,
+                message: t("label.please_input", {
+                  label: t("fields.account"),
+                }),
+              },
+            ]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="账号"
+              placeholder={t("fields.account")}
               className="login-input"
             />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: "请输入密码" }]}
+            rules={[
+              {
+                required: true,
+                message: t("label.please_input", {
+                  label: t("fields.password"),
+                }),
+              },
+            ]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="密码"
+              placeholder={t("fields.password")}
               className="login-input"
             />
           </Form.Item>
@@ -91,7 +105,7 @@ export default function LoginPage() {
               block
               className="login-button"
             >
-              登录
+              {t("fields.login")}
             </Button>
           </Form.Item>
         </Form>
