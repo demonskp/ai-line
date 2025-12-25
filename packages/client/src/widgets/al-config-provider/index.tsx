@@ -20,10 +20,6 @@ export default function AlConfigProvider({ children }: PropsWithChildren) {
         result = zhCN;
         dayjs.locale("zh-cn");
         break;
-      case "zh-TW":
-        result = zhTW;
-        dayjs.locale("zh-tw");
-        break;
       case "en":
         result = enUS;
         dayjs.locale("en");
