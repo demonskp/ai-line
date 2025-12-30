@@ -41,13 +41,16 @@ export async function login(req: Request, res: Response) {
     );
   }
   res.cookie(
-    "refresh_token",
-    jwtHelper.signToken({ id: user.id, account: user.account }),
+    REFRESH_TOKEN_COOKIE_NAME,
+    jwtHelper.signToken(
+      { id: user.id, account: user.account },
+      { expiresIn: REFRESH_JWT_TOKEN_MAX_AGE }
+    ),
     {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       maxAge: REFRESH_TOKEN_MAX_AGE,
-      // path: "/api/refresh_token",
+      path: "/api/refresh_token",
       sameSite: "lax",
     }
   );
@@ -81,10 +84,7 @@ export async function refreshToken(req: Request, res: Response) {
   res.cookie(
     REFRESH_TOKEN_COOKIE_NAME,
     jwtHelper.signToken(
-      {
-        id: user.id,
-        account: user.account,
-      },
+      { id: user.id, account: user.account },
       { expiresIn: REFRESH_JWT_TOKEN_MAX_AGE }
     ),
     {
