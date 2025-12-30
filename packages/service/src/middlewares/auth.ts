@@ -35,6 +35,6 @@ export const authMiddleware = async (
   contextHelper.set("user", user);
 
   const permissions = await permissionService.getPermissionsByUserId(user.id);
-  req.permissions = permissions;
+  req.permissions = permissions.map((p) => p.id);
   next();
 };

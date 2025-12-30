@@ -45,9 +45,10 @@ export async function login(req: Request, res: Response) {
     jwtHelper.signToken({ id: user.id, account: user.account }),
     {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       maxAge: REFRESH_TOKEN_MAX_AGE,
-      path: "/api/refresh_token",
+      // path: "/api/refresh_token",
+      sameSite: "lax",
     }
   );
   res.json(
@@ -88,9 +89,10 @@ export async function refreshToken(req: Request, res: Response) {
     ),
     {
       httpOnly: true,
-      // secure: process.env.NODE_ENV === "production",
+      secure: process.env.NODE_ENV === "production",
       maxAge: REFRESH_TOKEN_MAX_AGE,
       path: "/api/refresh_token",
+      sameSite: "lax",
     }
   );
   res.json(
@@ -105,4 +107,9 @@ export async function refreshToken(req: Request, res: Response) {
       ),
     })
   );
+}
+
+export async function logout(req: Request, res: Response) {
+  res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+  res.json(resultHelper.success(null));
 }

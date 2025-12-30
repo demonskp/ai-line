@@ -1,11 +1,12 @@
 import type { Router } from "express";
-import { login, refreshToken } from "./login";
+import { login, logout, refreshToken } from "./login";
 import { createAccount, currentUserInfo, userList } from "./user";
 import { permissionsHelper } from "../helpers";
 
 export function loadUnLoginControllers(router: Router) {
   router.post("/api/login", login);
   router.post("/api/refresh_token", refreshToken);
+  router.post("/api/logout", logout);
 }
 
 export function loadLoginControllers(router: Router) {

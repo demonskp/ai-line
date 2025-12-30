@@ -7,7 +7,7 @@ export const permissionCheck = (code: string) => {
     if (!permissions) {
       resultHelper.throwError(req.t("unauthorized"));
     }
-    const permission = permissions.find((p) => p.id === code);
+    const permission = permissions.find((p) => p === code);
     if (!permission) {
       resultHelper.throwError(req.t("unauthorized"));
     }

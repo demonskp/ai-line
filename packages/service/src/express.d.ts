@@ -8,7 +8,7 @@ declare global {
       token?: string;
       requestId?: string;
       user?: User;
-      permissions?: Permission[];
+      permissions?: string[];
       t: (key: string, options?: TOptions) => string;
       logger: pino.Logger;
       [key: string]: any;
